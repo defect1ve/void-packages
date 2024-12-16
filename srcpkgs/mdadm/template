@@ -1,26 +1,21 @@
 # Template file for 'mdadm'
 pkgname=mdadm
-version=4.3
-revision=3
+version=4.4
+revision=1
 hostmakedepends="pkg-config"
 makedepends="eudev-libudev-devel"
 short_desc="Tool for managing/monitoring Linux md device arrays"
 maintainer="Leah Neukirchen <leah@vuxu.org>"
 license="GPL-2.0-or-later"
-homepage="https://git.kernel.org/cgit/utils/mdadm/mdadm.git/log/"
-distfiles="${KERNEL_SITE}/utils/raid/${pkgname}/${pkgname}-${version}.tar.xz"
-checksum=416727ae1f1080ea6e3090cea36dd076826fc369151e36ab736557ba92196f9f
+homepage="https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/log/"
+distfiles="https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/snapshot/mdadm-${version}.tar.gz"
+checksum=680fed532857088e0cd87c56c00033ae35eae0a3f9cb7e1523b345ba8717fb93
 
-pre_configure() {
-	sed -i 's,^install : mdadm mdmon,install: ,g' Makefile
-}
 do_build() {
-	make ${makejobs} CC=$CC \
-		CFLAGS="$CFLAGS -DNO_COROSYNC -DNO_DLM -Wno-error -DSendmail='\"sendmail -t\"'" \
-		BINDIR=/usr/bin LDFLAGS="$LDFLAGS"
+	make ${makejobs} CC=$CC BINDIR=/usr/bin
 }
 do_install() {
 	make BINDIR=/usr/bin STRIP= PREFIX=/usr DESTDIR=${DESTDIR} install
 	vsv mdadm
-	vsconf mdadm.conf-example mdadm.conf
+	vsconf documentation/mdadm.conf-example mdadm.conf
 }
